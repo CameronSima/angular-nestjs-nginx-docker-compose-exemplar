@@ -33,7 +33,5 @@ services:
   #   volumes:
   #    - $PWD/redis-data:/var/lib/redis
   #    - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
-  #   networks:
-  #     - traefik-global-proxy
   #   environment:
   #    - REDIS_REPLICATION_MODE=master
