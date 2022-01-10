@@ -1,0 +1,13 @@
+FROM node:16.13.1-alpine as build-step
+RUN mkdir home/ui
+WORKDIR /home/ui
+COPY ./ui/package.json /home/ui
+RUN npm install
+COPY ./ui /home/ui
+COPY ./server/src/shared /home/ui/src/app/shared
+RUN npm run build --prod
+
+FROM nginx:1.20.1
+COPY --from=build-step /home/ui/dist/ui /usr/share/nginx/html
+COPY ./nginx.conf  /etc/nginx/conf.d/default.conf
+# EXPOSE 4200:80

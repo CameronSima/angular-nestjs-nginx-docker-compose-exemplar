@@ -1,0 +1,39 @@
+version: '3.6'
+
+services:
+  ui-angular:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile-ui
+    restart: always  
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 80:80
+
+  server:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile-app
+    environment:
+      - NODE_ENV=production
+    restart: always   
+    ports:
+      - 3000:3000 
+
+    # depends_on:
+    #   - redis
+
+  # redis:
+  #   image: "redis:alpine"
+  #   command: redis-server
+  #   restart: always
+  #   ports:
+  #    - "6379:6379"
+  #   volumes:
+  #    - $PWD/redis-data:/var/lib/redis
+  #    - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+  #   networks:
+  #     - traefik-global-proxy
+  #   environment:
+  #    - REDIS_REPLICATION_MODE=master

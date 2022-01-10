@@ -1,0 +1,21 @@
+FROM node:16.13.1-alpine as development
+RUN apk add --no-cache git
+WORKDIR /home/server
+COPY ./server/package*.json ./
+RUN npm install
+COPY ./server  /home/server
+RUN npm run build
+
+FROM node:16.13.1-alpine as production
+RUN apk add --no-cache ffmpeg git
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+WORKDIR /home/server
+COPY ./server/package*.json ./
+RUN npm install --only=production
+COPY . .
+COPY --from=development /home/server/dist ./dist
+EXPOSE 3000 1935 8000 8443
+
+CMD ["node", "dist/main"]
+
